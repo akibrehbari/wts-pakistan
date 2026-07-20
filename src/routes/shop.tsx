@@ -5,8 +5,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, CATEGORIES, formatPKR } from "@/lib/products";
+import { useListings } from "@/lib/listings";
 import { ProductCard } from "@/components/ProductCard";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const searchSchema = z.object({
   category: z.enum([
@@ -43,13 +44,15 @@ export const Route = createFileRoute("/shop")({
 function Shop() {
   const { category, sort = "featured", q } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const listings = useListings();
+  const allProducts = useMemo(() => [...PRODUCTS, ...listings], [listings]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [colorFilter, setColorFilter] = useState<Set<string>>(new Set());
   const [sizeFilter, setSizeFilter] = useState<Set<string>>(new Set());
 
   const isTopTen = category === "top10";
 
-  let filtered = PRODUCTS.filter((p) =>
+  let filtered = allProducts.filter((p) =>
     isTopTen ? p.topTenRank !== undefined : category ? p.category === category : true
   );
   if (q) {
@@ -67,8 +70,8 @@ function Shop() {
   else if (sort === "price-desc") filtered = [...filtered].sort((a, b) => b.price - a.price);
   else if (sort === "rating") filtered = [...filtered].sort((a, b) => b.rating - a.rating);
 
-  const allColors = Array.from(new Set(PRODUCTS.flatMap((p) => p.colors?.map((c) => c.name) ?? [])));
-  const allSizes = Array.from(new Set(PRODUCTS.flatMap((p) => p.sizes ?? [])));
+  const allColors = Array.from(new Set(allProducts.flatMap((p) => p.colors?.map((c) => c.name) ?? [])));
+  const allSizes = Array.from(new Set(allProducts.flatMap((p) => p.sizes ?? [])));
 
   const toggle = (set: Set<string>, val: string, setter: (s: Set<string>) => void) => {
     const next = new Set(set);

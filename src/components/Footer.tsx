@@ -39,6 +39,7 @@ export function Footer() {
             <h4 className="text-sm font-semibold">About</h4>
             <ul className="mt-3 space-y-2 text-sm text-white/70">
               <li><Link to="/about" className="hover:text-white">About us</Link></li>
+              <li><Link to="/sell" className="hover:text-white">Sell on WTS Pakistan</Link></li>
               <li>Careers</li><li>Blog</li><li>Terms & Privacy</li>
             </ul>
           </div>

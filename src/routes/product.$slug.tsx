@@ -1,38 +1,57 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Star, Truck, ShieldCheck, Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { getProduct, PRODUCTS, formatPKR } from "@/lib/products";
+import { getProduct, PRODUCTS, formatPKR, type Product } from "@/lib/products";
+import { getListing } from "@/lib/listings";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductSwatch } from "@/components/ProductSwatch";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const product = getProduct(params.slug);
-    if (!product) throw notFound();
-    return { product };
-  },
+  loader: ({ params }) => ({ product: getProduct(params.slug) ?? null, slug: params.slug }),
   head: ({ loaderData }) => ({
-    meta: loaderData
+    meta: loaderData?.product
       ? [
           { title: `${loaderData.product.name} — WTS Pakistan` },
           { name: "description", content: loaderData.product.description },
           { property: "og:title", content: loaderData.product.name },
           { property: "og:description", content: loaderData.product.description },
         ]
-      : [{ title: "Product not found — WTS Pakistan" }, { name: "robots", content: "noindex" }],
+      : [{ title: "Product — WTS Pakistan" }, { name: "robots", content: "noindex" }],
   }),
   component: ProductPage,
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product: staticProduct, slug } = Route.useLoaderData();
+  const [listingProduct, setListingProduct] = useState<Product | null>(null);
+  const [checkedListing, setCheckedListing] = useState(false);
+
+  useEffect(() => {
+    if (!staticProduct) setListingProduct(getListing(slug) ?? null);
+    setCheckedListing(true);
+  }, [slug, staticProduct]);
+
+  const product = staticProduct ?? listingProduct;
   const { add, setOpen } = useCart();
-  const [size, setSize] = useState<string | undefined>(product.sizes?.[0]);
-  const [color, setColor] = useState<string | undefined>(product.colors?.[0]?.name);
+  const [size, setSize] = useState<string | undefined>(product?.sizes?.[0]);
+  const [color, setColor] = useState<string | undefined>(product?.colors?.[0]?.name);
   const [qty, setQty] = useState(1);
+
+  if (!product) {
+    if (!checkedListing) {
+      return <div className="mx-auto max-w-7xl px-4 py-24 text-center text-sm text-muted-foreground sm:px-6">Loading…</div>;
+    }
+    return (
+      <div className="mx-auto max-w-md px-4 py-24 text-center sm:px-6">
+        <h1 className="font-display text-3xl font-bold">Product not found</h1>
+        <p className="mt-2 text-sm text-muted-foreground">This product doesn't exist or has been removed.</p>
+        <Link to="/shop" className="mt-6 inline-block text-primary hover:underline">Back to shop</Link>
+      </div>
+    );
+  }
 
   const related = PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 

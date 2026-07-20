@@ -1,11 +1,22 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, Store, LayoutDashboard, LogOut } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useCart } from "@/lib/cart";
+import { useAuth } from "@/lib/auth";
 import { CATEGORIES } from "@/lib/products";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const { count, setOpen } = useCart();
+  const { user, isSeller, openDialog, signOut } = useAuth();
   const [mobileNav, setMobileNav] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -62,10 +73,48 @@ export function Header() {
             >
               <Search className="h-4 w-4" />
             </button>
-            <button className="hidden h-9 items-center gap-1.5 rounded-md px-2 hover:bg-white/10 sm:flex" aria-label="Account">
-              <User className="h-4 w-4" />
-              <span className="text-sm">Account</span>
-            </button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="hidden h-9 items-center gap-1.5 rounded-md px-2 hover:bg-white/10 sm:flex" aria-label="Account menu">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={user.picture} alt={user.name} />
+                      <AvatarFallback className="text-[10px] text-foreground">{user.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="max-w-[100px] truncate text-sm">{user.name.split(" ")[0]}</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="truncate text-sm font-medium">{user.name}</div>
+                    <div className="truncate text-xs font-normal text-muted-foreground">{user.email}</div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {isSeller ? (
+                    <DropdownMenuItem onSelect={() => navigate({ to: "/sell" })}>
+                      <LayoutDashboard className="mr-2 h-4 w-4" /> Seller Dashboard
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onSelect={() => navigate({ to: "/sell" })}>
+                      <Store className="mr-2 h-4 w-4" /> Become a Seller
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button
+                onClick={openDialog}
+                className="hidden h-9 items-center gap-1.5 rounded-md px-2 hover:bg-white/10 sm:flex"
+                aria-label="Account"
+              >
+                <User className="h-4 w-4" />
+                <span className="text-sm">Sign in</span>
+              </button>
+            )}
             <button
               className="relative grid h-9 w-9 place-items-center rounded-md hover:bg-white/10"
               onClick={() => setOpen(true)}
@@ -131,6 +180,30 @@ export function Header() {
       {mobileNav && (
         <div className="max-h-[70vh] overflow-y-auto border-b bg-background md:hidden">
           <nav className="flex flex-col px-4 py-2">
+            {user ? (
+              <div className="flex items-center justify-between border-b py-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage src={user.picture} alt={user.name} />
+                    <AvatarFallback className="text-[10px]">{user.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="truncate text-sm font-medium">{user.name}</span>
+                </div>
+                <div className="flex shrink-0 items-center gap-3 text-xs">
+                  <Link to="/sell" onClick={() => setMobileNav(false)} className="text-primary">
+                    {isSeller ? "Seller Dashboard" : "Sell"}
+                  </Link>
+                  <button onClick={() => { signOut(); setMobileNav(false); }} className="text-muted-foreground">Sign out</button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => { openDialog(); setMobileNav(false); }}
+                className="border-b py-3 text-left text-sm font-medium text-primary"
+              >
+                Sign in / Create account
+              </button>
+            )}
             <Link to="/shop" onClick={() => setMobileNav(false)} className="border-b py-3 text-sm font-medium">Shop all</Link>
             <Link to="/shop" search={{ category: "top10" }} onClick={() => setMobileNav(false)} className="border-b py-3 text-sm text-muted-foreground">Top 10</Link>
             {CATEGORIES.map((c) => (
