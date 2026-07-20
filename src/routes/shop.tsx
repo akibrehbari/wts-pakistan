@@ -26,6 +26,7 @@ const searchSchema = z.object({
     "books",
   ]).optional(),
   sort: z.enum(["featured", "price-asc", "price-desc", "rating"]).optional(),
+  q: z.string().optional(),
 });
 
 export const Route = createFileRoute("/shop")({
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
-  const { category, sort = "featured" } = Route.useSearch();
+  const { category, sort = "featured", q } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [colorFilter, setColorFilter] = useState<Set<string>>(new Set());
@@ -51,6 +52,12 @@ function Shop() {
   let filtered = PRODUCTS.filter((p) =>
     isTopTen ? p.topTenRank !== undefined : category ? p.category === category : true
   );
+  if (q) {
+    const needle = q.trim().toLowerCase();
+    filtered = filtered.filter(
+      (p) => p.name.toLowerCase().includes(needle) || p.description.toLowerCase().includes(needle)
+    );
+  }
   filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
   if (colorFilter.size > 0) filtered = filtered.filter((p) => p.colors?.some((c) => colorFilter.has(c.name)));
   if (sizeFilter.size > 0) filtered = filtered.filter((p) => p.sizes?.some((s: string) => sizeFilter.has(s)));
@@ -73,11 +80,19 @@ function Shop() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">Collection</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">{q ? "Search results" : "Collection"}</p>
           <h1 className="mt-1 font-display text-4xl font-bold md:text-5xl">
-            {isTopTen ? "Top 10" : category ? CATEGORIES.find((c) => c.slug === category)?.label : "Shop all"}
+            {q ? `“${q}”` : isTopTen ? "Top 10" : category ? CATEGORIES.find((c) => c.slug === category)?.label : "Shop all"}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">{filtered.length} products</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {filtered.length} products
+            {q && (
+              <>
+                {" · "}
+                <Link to="/shop" className="text-primary hover:underline">Clear search</Link>
+              </>
+            )}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <label className="text-xs text-muted-foreground">Sort by</label>

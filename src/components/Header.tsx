@@ -1,6 +1,6 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Search, ShoppingBag, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useCart } from "@/lib/cart";
 import { CATEGORIES } from "@/lib/products";
 
@@ -8,7 +8,16 @@ export function Header() {
   const { count, setOpen } = useCart();
   const [mobileNav, setMobileNav] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
+  const submitSearch = (e: FormEvent) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    navigate({ to: "/shop", search: trimmed ? { q: trimmed } : {} });
+    setSearchOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-40">
@@ -29,15 +38,20 @@ export function Header() {
 
           {/* Search bar — the dominant element in the header, marketplace-style */}
           <div className="hidden flex-1 items-center justify-center md:flex">
-            <div className="flex w-full max-w-[640px] items-center overflow-hidden rounded-md bg-white shadow-lg ring-2 ring-primary/40 focus-within:ring-primary">
+            <form
+              onSubmit={submitSearch}
+              className="flex w-full max-w-[640px] items-center overflow-hidden rounded-md bg-white shadow-lg ring-2 ring-primary/40 focus-within:ring-primary"
+            >
               <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search products, brands and categories..."
                 className="h-12 flex-1 bg-transparent px-5 text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
               />
-              <button className="grid h-12 w-14 shrink-0 place-items-center bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Search">
+              <button type="submit" className="grid h-12 w-14 shrink-0 place-items-center bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
-            </div>
+            </form>
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -69,16 +83,18 @@ export function Header() {
 
         {searchOpen && (
           <div className="border-t border-white/10 px-4 py-3 md:hidden">
-            <div className="flex items-center overflow-hidden rounded-md bg-white">
+            <form onSubmit={submitSearch} className="flex items-center overflow-hidden rounded-md bg-white">
               <input
                 autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search products, brands and categories..."
                 className="h-10 flex-1 bg-transparent px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
               />
-              <button className="grid h-10 w-11 shrink-0 place-items-center bg-primary text-primary-foreground" aria-label="Search">
+              <button type="submit" className="grid h-10 w-11 shrink-0 place-items-center bg-primary text-primary-foreground" aria-label="Search">
                 <Search className="h-4 w-4" />
               </button>
-            </div>
+            </form>
           </div>
         )}
       </div>
