@@ -1,9 +1,10 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Search, ShoppingBag, User, Menu, X, Store, LayoutDashboard, LogOut } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, Store, LayoutDashboard, LogOut, MapPin, ChevronDown, LayoutGrid, Plus, Heart } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
-import { CATEGORIES } from "@/lib/products";
+import { CATEGORIES, CITIES } from "@/lib/products";
+import { useLocationFilter, setLocationFilter } from "@/lib/locationFilter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -22,6 +23,7 @@ export function Header() {
   const [query, setQuery] = useState("");
   const path = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
+  const city = useLocationFilter();
 
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -47,6 +49,24 @@ export function Header() {
             WTS <span className="text-primary">Pakistan</span>
           </Link>
 
+          {/* Location picker — OLX-style regional selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="hidden shrink-0 items-center gap-1 rounded-md px-2 py-1.5 text-sm hover:bg-white/10 lg:flex">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span className="max-w-[90px] truncate">{city}</span>
+                <ChevronDown className="h-3 w-3 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
+              {CITIES.map((c) => (
+                <DropdownMenuItem key={c} onSelect={() => setLocationFilter(c)}>
+                  {c}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Search bar — the dominant element in the header, marketplace-style */}
           <div className="hidden flex-1 items-center justify-center md:flex">
             <form
@@ -65,7 +85,7 @@ export function Header() {
             </form>
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5">
             <button
               className="grid h-9 w-9 place-items-center rounded-md hover:bg-white/10 md:hidden"
               onClick={() => setSearchOpen((v) => !v)}
@@ -73,6 +93,12 @@ export function Header() {
             >
               <Search className="h-4 w-4" />
             </button>
+            <Link
+              to="/sell"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4" /> <span className="hidden sm:inline">SELL</span>
+            </Link>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -99,6 +125,9 @@ export function Header() {
                       <Store className="mr-2 h-4 w-4" /> Become a Seller
                     </DropdownMenuItem>
                   )}
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/saved" })}>
+                    <Heart className="mr-2 h-4 w-4" /> Saved Ads
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" /> Sign out
@@ -151,6 +180,36 @@ export function Header() {
       {/* Category bar */}
       <div className="hidden border-b border-border bg-background md:block">
         <nav className="mx-auto flex h-11 max-w-7xl items-center gap-6 overflow-x-auto px-4 sm:px-6 [scrollbar-width:thin]">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-semibold text-foreground hover:text-primary">
+                <LayoutGrid className="h-4 w-4" /> All Categories <ChevronDown className="h-3 w-3 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-96 w-64 overflow-y-auto">
+              {CATEGORIES.map((c) => (
+                <DropdownMenuItem key={c.slug} onSelect={() => navigate({ to: "/shop", search: { category: c.slug } })}>
+                  {c.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <span className="h-5 w-px shrink-0 bg-border" />
+          <Link
+            to="/shop"
+            search={{ category: "vehicles" }}
+            className="shrink-0 whitespace-nowrap text-sm font-bold text-primary hover:underline"
+          >
+            Motors
+          </Link>
+          <Link
+            to="/shop"
+            search={{ category: "property-sale" }}
+            className="shrink-0 whitespace-nowrap text-sm font-bold text-primary hover:underline"
+          >
+            Property
+          </Link>
+          <span className="h-5 w-px shrink-0 bg-border" />
           <Link
             to="/shop"
             className={`shrink-0 whitespace-nowrap text-sm font-medium transition-colors hover:text-primary ${path === "/shop" ? "text-foreground" : "text-muted-foreground"}`}
@@ -204,6 +263,23 @@ export function Header() {
                 Sign in / Create account
               </button>
             )}
+            <div className="flex items-center justify-between border-b py-3">
+              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary" /> Location
+              </span>
+              <select
+                value={city}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="rounded-md border bg-background px-2 py-1 text-sm"
+              >
+                {CITIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <Link to="/shop" search={{ category: "vehicles" }} onClick={() => setMobileNav(false)} className="border-b py-3 text-sm font-bold text-primary">Motors</Link>
+            <Link to="/shop" search={{ category: "property-sale" }} onClick={() => setMobileNav(false)} className="border-b py-3 text-sm font-bold text-primary">Property</Link>
+            <Link to="/saved" onClick={() => setMobileNav(false)} className="border-b py-3 text-sm text-muted-foreground">Saved Ads</Link>
             <Link to="/shop" onClick={() => setMobileNav(false)} className="border-b py-3 text-sm font-medium">Shop all</Link>
             <Link to="/shop" search={{ category: "top10" }} onClick={() => setMobileNav(false)} className="border-b py-3 text-sm text-muted-foreground">Top 10</Link>
             {CATEGORIES.map((c) => (

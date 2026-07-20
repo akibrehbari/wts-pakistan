@@ -2,6 +2,12 @@ import { Instagram, Facebook, Youtube, Twitter } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CATEGORIES } from "@/lib/products";
+
+const TRENDING_SEARCHES = [
+  "iPhone 13", "Toyota Corolla", "House for Rent Lahore", "Honda CD 70",
+  "Samsung LED TV", "Plot in Bahria Town", "Gaming Laptop", "Sofa Set",
+];
 
 export function Footer() {
   return (
@@ -11,7 +17,7 @@ export function Footer() {
           <div className="sm:col-span-2 md:col-span-2">
             <h3 className="font-display text-2xl font-bold">WTS <span className="text-primary">Pakistan</span></h3>
             <p className="mt-2 max-w-sm text-sm text-white/70">
-              Everyday essentials at great prices. Delivered nationwide.
+              Buy and sell anything, anywhere in Pakistan.
             </p>
             <form
               className="mt-6 flex max-w-sm gap-2"
@@ -24,9 +30,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold">Shop</h4>
+            <h4 className="text-sm font-semibold">Popular Categories</h4>
             <ul className="mt-3 space-y-2 text-sm text-white/70">
-              <li>New arrivals</li><li>Best sellers</li><li>Flash Sale</li><li>Top 10</li><li>Gift cards</li>
+              {CATEGORIES.slice(0, 6).map((c) => (
+                <li key={c.slug}>
+                  <Link to="/shop" search={{ category: c.slug }} className="hover:text-white">{c.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -40,7 +50,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm text-white/70">
               <li><Link to="/about" className="hover:text-white">About us</Link></li>
               <li><Link to="/sell" className="hover:text-white">Sell on WTS Pakistan</Link></li>
-              <li>Careers</li><li>Blog</li><li>Terms & Privacy</li>
+              <li>Careers</li><li>Blog</li><li>Terms & Privacy</li><li>Sitemap</li>
             </ul>
           </div>
           <div>
@@ -54,7 +64,23 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col-reverse items-start justify-between gap-6 border-t border-white/15 pt-6 md:flex-row md:items-center">
+        <div className="mt-10 border-t border-white/15 pt-8">
+          <h4 className="text-xs font-semibold uppercase tracking-widest text-white/60">Trending Searches</h4>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {TRENDING_SEARCHES.map((term) => (
+              <Link
+                key={term}
+                to="/shop"
+                search={{ q: term }}
+                className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/70 hover:border-white/40 hover:text-white"
+              >
+                {term}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col-reverse items-start justify-between gap-6 border-t border-white/15 pt-6 md:flex-row md:items-center">
           <p className="text-xs text-white/70">© {new Date().getFullYear()} WTS Pakistan. All rights reserved.</p>
 
           <div className="flex items-center gap-3 text-white/70">

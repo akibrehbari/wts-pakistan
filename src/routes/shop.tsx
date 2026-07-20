@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, CATEGORIES, formatPKR } from "@/lib/products";
 import { useListings } from "@/lib/listings";
+import { useLocationFilter } from "@/lib/locationFilter";
 import { ProductCard } from "@/components/ProductCard";
 import { useMemo, useState } from "react";
 
@@ -13,18 +14,19 @@ const searchSchema = z.object({
   category: z.enum([
     "top10",
     "mobiles",
-    "laptops",
-    "tvs",
-    "appliances",
-    "ac",
-    "cameras",
-    "beauty",
-    "womens-fashion",
-    "mens-fashion",
-    "home-living",
-    "accessories",
-    "grocery",
+    "vehicles",
+    "property-sale",
+    "property-rent",
+    "electronics",
+    "bikes",
+    "business",
+    "services",
+    "jobs",
+    "animals",
+    "furniture",
+    "fashion",
     "books",
+    "kids",
   ]).optional(),
   sort: z.enum(["featured", "price-asc", "price-desc", "rating"]).optional(),
   q: z.string().optional(),
@@ -46,7 +48,8 @@ function Shop() {
   const navigate = Route.useNavigate();
   const listings = useListings();
   const allProducts = useMemo(() => [...PRODUCTS, ...listings], [listings]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
+  const city = useLocationFilter();
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 40000000]);
   const [colorFilter, setColorFilter] = useState<Set<string>>(new Set());
   const [sizeFilter, setSizeFilter] = useState<Set<string>>(new Set());
 
@@ -55,6 +58,7 @@ function Shop() {
   let filtered = allProducts.filter((p) =>
     isTopTen ? p.topTenRank !== undefined : category ? p.category === category : true
   );
+  if (city !== "Pakistan") filtered = filtered.filter((p) => p.location === city);
   if (q) {
     const needle = q.trim().toLowerCase();
     filtered = filtered.filter(
@@ -88,7 +92,7 @@ function Shop() {
             {q ? `“${q}”` : isTopTen ? "Top 10" : category ? CATEGORIES.find((c) => c.slug === category)?.label : "Shop all"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {filtered.length} products
+            {filtered.length} products{city !== "Pakistan" && <> in {city}</>}
             {q && (
               <>
                 {" · "}
@@ -152,8 +156,8 @@ function Shop() {
                 value={priceRange}
                 onValueChange={(v) => setPriceRange([v[0], v[1]] as [number, number])}
                 min={0}
-                max={200000}
-                step={1000}
+                max={40000000}
+                step={5000}
                 className="mt-4"
               />
               <div className="mt-2 flex justify-between text-xs text-muted-foreground">
@@ -195,7 +199,7 @@ function Shop() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { setColorFilter(new Set()); setSizeFilter(new Set()); setPriceRange([0, 200000]); }}
+              onClick={() => { setColorFilter(new Set()); setSizeFilter(new Set()); setPriceRange([0, 40000000]); }}
             >
               Clear filters
             </Button>

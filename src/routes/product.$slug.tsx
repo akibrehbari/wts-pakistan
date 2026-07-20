@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Star, Truck, ShieldCheck, Minus, Plus } from "lucide-react";
+import { Star, Truck, ShieldCheck, Minus, Plus, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { getProduct, PRODUCTS, formatPKR, type Product } from "@/lib/products";
+import { getProduct, PRODUCTS, formatPKR, timeAgo, type Product } from "@/lib/products";
 import { getListing } from "@/lib/listings";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
@@ -87,12 +87,21 @@ function ProductPage() {
           <p className="text-xs uppercase tracking-widest text-muted-foreground">{product.category}</p>
           <h1 className="mt-2 font-display text-4xl md:text-5xl">{product.name}</h1>
 
-          <div className="mt-3 flex items-center gap-3">
-            <div className="flex items-center gap-1 text-sm">
-              <Star className="h-4 w-4 fill-current text-primary" />
-              {product.rating}
-              <span className="text-muted-foreground">({product.reviews} reviews)</span>
-            </div>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            {product.rating > 0 && (
+              <div className="flex items-center gap-1 text-sm">
+                <Star className="h-4 w-4 fill-current text-primary" />
+                {product.rating}
+                <span className="text-muted-foreground">({product.reviews} reviews)</span>
+              </div>
+            )}
+            {product.location && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                {product.location}
+                {product.postedAt && <span>· {timeAgo(product.postedAt)}</span>}
+              </div>
+            )}
           </div>
 
           <div className="mt-6 flex items-baseline gap-3">

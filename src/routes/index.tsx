@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArrowRight, Truck, ShieldCheck, RefreshCw, Sparkles, Trophy, Zap,
-  Shirt, Home as HomeIcon, Watch, Smartphone, Laptop, Tv, Refrigerator,
-  Snowflake, Camera, ShoppingBasket, BookOpen, ChevronLeft, ChevronRight, Download,
+  ArrowRight, Truck, ShieldCheck, RefreshCw, Trophy, Zap,
+  Shirt, Smartphone, Car, Building2, KeyRound, Tv, Bike, Factory,
+  Wrench, Briefcase, PawPrint, Sofa, BookOpen, Baby,
+  ChevronLeft, ChevronRight, Download,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PRODUCTS, CATEGORIES } from "@/lib/products";
+import { PRODUCTS, CATEGORIES, type Product } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/")({
@@ -18,14 +19,14 @@ const SLIDES = [
     title: "Mobiles & Electronics",
     subtitle: "Up to 30% off the latest phones, laptops and TVs",
     cta: "Shop Electronics",
-    search: { category: "mobiles" } as const,
+    search: { category: "electronics" } as const,
     gradient: "linear-gradient(135deg,#0f4c4f,#1a7a7e)",
   },
   {
     title: "New Season Fashion",
     subtitle: "Fresh arrivals in women's & men's fashion, every week",
     cta: "Shop Fashion",
-    search: { category: "womens-fashion" } as const,
+    search: { category: "fashion" } as const,
     gradient: "linear-gradient(135deg,#7a3b1a,#c67b56)",
   },
   {
@@ -39,23 +40,32 @@ const SLIDES = [
 
 const CATEGORY_ICONS: Record<string, typeof Shirt> = {
   mobiles: Smartphone,
-  laptops: Laptop,
-  tvs: Tv,
-  appliances: Refrigerator,
-  ac: Snowflake,
-  cameras: Camera,
-  beauty: Sparkles,
-  "womens-fashion": Shirt,
-  "mens-fashion": Shirt,
-  "home-living": HomeIcon,
-  accessories: Watch,
-  grocery: ShoppingBasket,
+  vehicles: Car,
+  "property-sale": Building2,
+  "property-rent": KeyRound,
+  electronics: Tv,
+  bikes: Bike,
+  business: Factory,
+  services: Wrench,
+  jobs: Briefcase,
+  animals: PawPrint,
+  furniture: Sofa,
+  fashion: Shirt,
   books: BookOpen,
+  kids: Baby,
 };
+
+const SHOWCASES: { slug: Product["category"]; title: string }[] = [
+  { slug: "mobiles", title: "Mobile Phones" },
+  { slug: "vehicles", title: "Cars & Vehicles" },
+  { slug: "bikes", title: "Bikes & Motorcycles" },
+  { slug: "property-sale", title: "Houses & Property" },
+  { slug: "electronics", title: "Electronics & Appliances" },
+  { slug: "jobs", title: "Jobs" },
+];
 
 function Home() {
   const flashSale = PRODUCTS.filter((p) => p.compareAt).slice(0, 5);
-  const trending = PRODUCTS.slice(4, 8);
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
@@ -149,7 +159,7 @@ function Home() {
 
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-8">
+        <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 md:grid-cols-8">
           <Link
             to="/shop"
             className="group flex flex-col items-center gap-2 rounded-lg p-3 text-center transition-colors hover:bg-muted"
@@ -203,16 +213,50 @@ function Home() {
         </div>
       </section>
 
-      {/* Trending */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <h2 className="font-display text-3xl font-bold md:text-4xl">Trending now</h2>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {trending.map((p) => <ProductCard key={p.id} product={p} />)}
-        </div>
-      </section>
+      {/* Categorized showcase modules */}
+      {SHOWCASES.map(({ slug, title }) => {
+        const items = PRODUCTS.filter((p) => p.category === slug).slice(0, 5);
+        if (items.length === 0) return null;
+        return (
+          <section key={slug} className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+            <div className="flex items-end justify-between">
+              <h2 className="font-display text-2xl font-bold sm:text-3xl">{title}</h2>
+              <Link to="/shop" search={{ category: slug }} className="text-sm font-medium text-primary hover:underline">
+                View more →
+              </Link>
+            </div>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {items.map((p) => <ProductCard key={p.id} product={p} />)}
+            </div>
+          </section>
+        );
+      })}
 
       {/* Just For You — infinite-loading algorithmic grid */}
       <JustForYou />
+
+      {/* App download banner */}
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-[#002f34] px-6 py-10 text-center text-white sm:flex-row sm:text-left md:px-14">
+          <div>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">Get the WTS Pakistan app</h2>
+            <p className="mt-2 max-w-md text-sm text-white/70">
+              Buy and sell on the go — post ads, chat with buyers, and get notified instantly.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button className="flex items-center gap-2 rounded-md border border-white/25 px-4 py-2.5 text-sm font-medium hover:bg-white/10">
+              <Download className="h-4 w-4" /> App Store
+            </button>
+            <button className="flex items-center gap-2 rounded-md border border-white/25 px-4 py-2.5 text-sm font-medium hover:bg-white/10">
+              <Download className="h-4 w-4" /> Google Play
+            </button>
+            <button className="flex items-center gap-2 rounded-md border border-white/25 px-4 py-2.5 text-sm font-medium hover:bg-white/10">
+              <Download className="h-4 w-4" /> AppGallery
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Reassurance */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6">

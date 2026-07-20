@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/lib/auth";
 import { useListings, addListing, removeListing, randomSwatch, slugify, type Listing } from "@/lib/listings";
-import { CATEGORIES, formatPKR, type Product } from "@/lib/products";
+import { CATEGORIES, CITIES, formatPKR, timeAgo, type Product } from "@/lib/products";
 import { ProductSwatch } from "@/components/ProductSwatch";
 
 export const Route = createFileRoute("/sell")({
@@ -28,7 +28,8 @@ function SellerDashboard() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [compareAt, setCompareAt] = useState("");
-  const [category, setCategory] = useState<Product["category"]>("accessories");
+  const [category, setCategory] = useState<Product["category"]>("fashion");
+  const [location, setLocation] = useState<string>(CITIES[0]);
   const [description, setDescription] = useState("");
 
   const resetForm = () => {
@@ -56,6 +57,8 @@ function SellerDashboard() {
       swatch: randomSwatch(),
       sellerId: user.id,
       sellerName: user.name,
+      location,
+      postedAt: Date.now(),
     };
     addListing(listing);
     resetForm();
@@ -111,6 +114,7 @@ function SellerDashboard() {
                   <div className="p-2.5">
                     <h3 className="line-clamp-2 text-sm">{l.name}</h3>
                     <div className="mt-1 text-sm font-semibold">{formatPKR(l.price)}</div>
+                    <div className="mt-0.5 text-xs text-muted-foreground">{l.location} · {timeAgo(l.postedAt)}</div>
                     <button
                       onClick={() => { removeListing(l.id); toast.success("Listing removed"); }}
                       className="mt-2 flex items-center gap-1 text-xs text-destructive hover:underline"
@@ -141,17 +145,31 @@ function SellerDashboard() {
                 <Input type="number" min="1" value={compareAt} onChange={(e) => setCompareAt(e.target.value)} placeholder="3000" className="mt-1" />
               </div>
             </div>
-            <div>
-              <label className="text-sm font-medium">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as Product["category"])}
-                className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.slug} value={c.slug}>{c.label}</option>
-                ))}
-              </select>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as Product["category"])}
+                  className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c.slug} value={c.slug}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">City</label>
+                <select
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+                >
+                  {CITIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium">Description</label>
