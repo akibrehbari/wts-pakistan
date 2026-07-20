@@ -90,7 +90,7 @@ function ProductPage() {
             <div className="mt-8">
               <div className="text-sm font-medium">Color: <span className="text-muted-foreground">{color}</span></div>
               <div className="mt-3 flex gap-2">
-                {product.colors.map((c) => (
+                {product.colors.map((c: { name: string; hex: string }) => (
                   <button
                     key={c.name}
                     onClick={() => setColor(c.name)}
@@ -110,7 +110,7 @@ function ProductPage() {
                 <button className="text-xs text-muted-foreground underline">Size guide</button>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {product.sizes.map((s) => (
+                {product.sizes.map((s: string) => (
                   <button
                     key={s}
                     onClick={() => setSize(s)}

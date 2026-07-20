@@ -34,7 +34,7 @@ function Shop() {
   let filtered = PRODUCTS.filter((p) => (category ? p.category === category : true));
   filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
   if (colorFilter.size > 0) filtered = filtered.filter((p) => p.colors?.some((c) => colorFilter.has(c.name)));
-  if (sizeFilter.size > 0) filtered = filtered.filter((p) => p.sizes?.some((s) => sizeFilter.has(s)));
+  if (sizeFilter.size > 0) filtered = filtered.filter((p) => p.sizes?.some((s: string) => sizeFilter.has(s)));
 
   if (sort === "price-asc") filtered = [...filtered].sort((a, b) => a.price - b.price);
   else if (sort === "price-desc") filtered = [...filtered].sort((a, b) => b.price - a.price);
