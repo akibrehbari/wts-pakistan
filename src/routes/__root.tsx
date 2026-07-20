@@ -15,6 +15,7 @@ import { CartProvider } from "@/lib/cart";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
+import { ChatBubble } from "@/components/ChatBubble";
 
 function NotFoundComponent() {
   return (
@@ -68,12 +69,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Bazaar — Thoughtfully made goods, delivered across Pakistan" },
-      { name: "description", content: "Shop apparel, home, beauty and accessories from Pakistani artisans. PKR pricing, JazzCash, Easypaisa and cash on delivery." },
-      { property: "og:title", content: "Bazaar — Thoughtfully made goods" },
-      { property: "og:description", content: "Curated products from Pakistani makers. Free shipping on orders over PKR 5,000." },
+      { title: "WTS Pakistan — Shop everything, delivered nationwide" },
+      { name: "description", content: "Shop apparel, home, beauty and accessories online. PKR pricing, JazzCash, Easypaisa and cash on delivery across Pakistan." },
+      { property: "og:title", content: "WTS Pakistan — Shop everything, delivered nationwide" },
+      { property: "og:description", content: "Great prices on everyday essentials. Free shipping on orders over PKR 5,000." },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Bazaar" },
+      { property: "og:site_name", content: "WTS Pakistan" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -81,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -117,6 +118,7 @@ function RootComponent() {
           <Footer />
         </div>
         <CartDrawer />
+        <ChatBubble />
       </CartProvider>
     </QueryClientProvider>
   );

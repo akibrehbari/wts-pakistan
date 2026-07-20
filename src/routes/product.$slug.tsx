@@ -17,12 +17,12 @@ export const Route = createFileRoute("/product/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.product.name} — Bazaar` },
+          { title: `${loaderData.product.name} — WTS Pakistan` },
           { name: "description", content: loaderData.product.description },
           { property: "og:title", content: loaderData.product.name },
           { property: "og:description", content: loaderData.product.description },
         ]
-      : [{ title: "Product not found — Bazaar" }, { name: "robots", content: "noindex" }],
+      : [{ title: "Product not found — WTS Pakistan" }, { name: "robots", content: "noindex" }],
   }),
   component: ProductPage,
 });

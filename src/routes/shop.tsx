@@ -9,7 +9,22 @@ import { ProductCard } from "@/components/ProductCard";
 import { useState } from "react";
 
 const searchSchema = z.object({
-  category: z.enum(["apparel", "home", "beauty", "accessories"]).optional(),
+  category: z.enum([
+    "top10",
+    "mobiles",
+    "laptops",
+    "tvs",
+    "appliances",
+    "ac",
+    "cameras",
+    "beauty",
+    "womens-fashion",
+    "mens-fashion",
+    "home-living",
+    "accessories",
+    "grocery",
+    "books",
+  ]).optional(),
   sort: z.enum(["featured", "price-asc", "price-desc", "rating"]).optional(),
 });
 
@@ -17,8 +32,8 @@ export const Route = createFileRoute("/shop")({
   validateSearch: (s) => searchSchema.parse(s),
   head: () => ({
     meta: [
-      { title: "Shop — Bazaar" },
-      { name: "description", content: "Browse apparel, home, beauty and accessories from Pakistani artisans." },
+      { title: "Shop — WTS Pakistan" },
+      { name: "description", content: "Browse mobiles, laptops, electronics, appliances, fashion, groceries and more." },
     ],
   }),
   component: Shop,
@@ -27,16 +42,21 @@ export const Route = createFileRoute("/shop")({
 function Shop() {
   const { category, sort = "featured" } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 15000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000]);
   const [colorFilter, setColorFilter] = useState<Set<string>>(new Set());
   const [sizeFilter, setSizeFilter] = useState<Set<string>>(new Set());
 
-  let filtered = PRODUCTS.filter((p) => (category ? p.category === category : true));
+  const isTopTen = category === "top10";
+
+  let filtered = PRODUCTS.filter((p) =>
+    isTopTen ? p.topTenRank !== undefined : category ? p.category === category : true
+  );
   filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
   if (colorFilter.size > 0) filtered = filtered.filter((p) => p.colors?.some((c) => colorFilter.has(c.name)));
   if (sizeFilter.size > 0) filtered = filtered.filter((p) => p.sizes?.some((s: string) => sizeFilter.has(s)));
 
-  if (sort === "price-asc") filtered = [...filtered].sort((a, b) => a.price - b.price);
+  if (isTopTen && sort === "featured") filtered = [...filtered].sort((a, b) => (a.topTenRank ?? 0) - (b.topTenRank ?? 0));
+  else if (sort === "price-asc") filtered = [...filtered].sort((a, b) => a.price - b.price);
   else if (sort === "price-desc") filtered = [...filtered].sort((a, b) => b.price - a.price);
   else if (sort === "rating") filtered = [...filtered].sort((a, b) => b.rating - a.rating);
 
@@ -54,8 +74,8 @@ function Shop() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Collection</p>
-          <h1 className="mt-1 font-display text-4xl md:text-5xl">
-            {category ? CATEGORIES.find((c) => c.slug === category)?.label : "Shop all"}
+          <h1 className="mt-1 font-display text-4xl font-bold md:text-5xl">
+            {isTopTen ? "Top 10" : category ? CATEGORIES.find((c) => c.slug === category)?.label : "Shop all"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">{filtered.length} products</p>
         </div>
@@ -75,19 +95,26 @@ function Shop() {
       </div>
 
       {/* Category pills */}
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-6 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
         <Link
           to="/shop"
-          className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${!category ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+          className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-1.5 text-sm transition-colors ${!category ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
         >
           All
+        </Link>
+        <Link
+          to="/shop"
+          search={{ category: "top10" }}
+          className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-1.5 text-sm transition-colors ${isTopTen ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+        >
+          Top 10
         </Link>
         {CATEGORIES.map((c) => (
           <Link
             key={c.slug}
             to="/shop"
             search={{ category: c.slug }}
-            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${category === c.slug ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-1.5 text-sm transition-colors ${category === c.slug ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
           >
             {c.label}
           </Link>
@@ -107,8 +134,8 @@ function Shop() {
                 value={priceRange}
                 onValueChange={(v) => setPriceRange([v[0], v[1]] as [number, number])}
                 min={0}
-                max={15000}
-                step={500}
+                max={200000}
+                step={1000}
                 className="mt-4"
               />
               <div className="mt-2 flex justify-between text-xs text-muted-foreground">
@@ -150,7 +177,7 @@ function Shop() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { setColorFilter(new Set()); setSizeFilter(new Set()); setPriceRange([0, 15000]); }}
+              onClick={() => { setColorFilter(new Set()); setSizeFilter(new Set()); setPriceRange([0, 200000]); }}
             >
               Clear filters
             </Button>
@@ -163,8 +190,8 @@ function Shop() {
               No products match your filters.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-6">
-              {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+              {filtered.map((p) => <ProductCard key={p.id} product={p} rank={isTopTen ? p.topTenRank : undefined} />)}
             </div>
           )}
         </div>
