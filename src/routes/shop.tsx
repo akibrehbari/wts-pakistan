@@ -63,7 +63,7 @@ function Shop() {
           <label className="text-xs text-muted-foreground">Sort by</label>
           <select
             value={sort}
-            onChange={(e) => navigate({ search: (s) => ({ ...s, sort: e.target.value as never }) })}
+            onChange={(e) => navigate({ search: (s: Record<string, unknown>) => ({ ...s, sort: e.target.value as never }) })}
             className="rounded-md border bg-background px-3 py-1.5 text-sm"
           >
             <option value="featured">Featured</option>
