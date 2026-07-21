@@ -15,8 +15,8 @@ const AD_CITIES = CITIES.filter((c) => c !== "Pakistan");
 export const Route = createFileRoute("/sell")({
   head: () => ({
     meta: [
-      { title: "My Ads — WTS Pakistan" },
-      { name: "description", content: "Post an ad and manage your listings on WTS Pakistan." },
+      { title: "My Ads — WTS in Pakistan" },
+      { name: "description", content: "Post an ad and manage your listings on WTS in Pakistan." },
     ],
   }),
   component: MyAds,

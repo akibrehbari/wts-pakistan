@@ -46,7 +46,7 @@ export function Header() {
           </button>
 
           <Link to="/" className="shrink-0 font-display text-2xl font-bold tracking-tight text-white">
-            WTS <span className="text-primary">Pakistan</span>
+            WTS <span className="font-normal">in</span> <span className="text-primary">Pakistan</span>
           </Link>
 
           {/* Location picker — OLX-style regional selector */}

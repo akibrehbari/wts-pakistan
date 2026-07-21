@@ -239,7 +239,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-[#002f34] px-6 py-10 text-center text-white sm:flex-row sm:text-left md:px-14">
           <div>
-            <h2 className="font-display text-2xl font-bold sm:text-3xl">Get the WTS Pakistan app</h2>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">Get the WTS in Pakistan app</h2>
             <p className="mt-2 max-w-md text-sm text-white/70">
               Buy and sell on the go — post ads, chat with buyers, and get notified instantly.
             </p>

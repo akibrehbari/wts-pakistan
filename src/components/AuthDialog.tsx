@@ -9,7 +9,7 @@ export function AuthDialog() {
     <Dialog open={dialogOpen} onOpenChange={(v) => !v && closeDialog()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Sign in to WTS Pakistan</DialogTitle>
+          <DialogTitle>Sign in to WTS in Pakistan</DialogTitle>
           <DialogDescription>Sign in with Google to buy, sell, or save your favorite ads.</DialogDescription>
         </DialogHeader>
         <GoogleSignInButton />

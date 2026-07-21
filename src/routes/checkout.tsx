@@ -11,7 +11,7 @@ import { ProductSwatch } from "@/components/ProductSwatch";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — WTS Pakistan" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Checkout — WTS in Pakistan" }, { name: "robots", content: "noindex" }] }),
   component: Checkout,
 });
 

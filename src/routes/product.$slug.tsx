@@ -14,12 +14,12 @@ export const Route = createFileRoute("/product/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData?.product
       ? [
-          { title: `${loaderData.product.name} — WTS Pakistan` },
+          { title: `${loaderData.product.name} — WTS in Pakistan` },
           { name: "description", content: loaderData.product.description },
           { property: "og:title", content: loaderData.product.name },
           { property: "og:description", content: loaderData.product.description },
         ]
-      : [{ title: "Product — WTS Pakistan" }, { name: "robots", content: "noindex" }],
+      : [{ title: "Product — WTS in Pakistan" }, { name: "robots", content: "noindex" }],
   }),
   component: ProductPage,
 });

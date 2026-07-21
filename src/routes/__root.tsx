@@ -71,12 +71,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "WTS Pakistan — Shop everything, delivered nationwide" },
+      { title: "WTS in Pakistan — Shop everything, delivered nationwide" },
       { name: "description", content: "Shop apparel, home, beauty and accessories online. PKR pricing, JazzCash, Easypaisa and cash on delivery across Pakistan." },
-      { property: "og:title", content: "WTS Pakistan — Shop everything, delivered nationwide" },
+      { property: "og:title", content: "WTS in Pakistan — Shop everything, delivered nationwide" },
       { property: "og:description", content: "Great prices on everyday essentials. Free shipping on orders over PKR 5,000." },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "WTS Pakistan" },
+      { property: "og:site_name", content: "WTS in Pakistan" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

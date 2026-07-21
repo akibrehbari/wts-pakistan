@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — WTS Pakistan" },
-      { name: "description", content: "Learn what WTS Pakistan is, how delivery and payments work, and what makes us different." },
+      { title: "About Us — WTS in Pakistan" },
+      { name: "description", content: "Learn what WTS in Pakistan is, how delivery and payments work, and what makes us different." },
     ],
   }),
   component: About,
@@ -53,7 +53,7 @@ function About() {
         Everyday shopping, made simple.
       </h1>
       <p className="mt-5 max-w-2xl text-muted-foreground">
-        WTS Pakistan is an online marketplace built around a simple idea: shopping
+        WTS in Pakistan is an online marketplace built around a simple idea: shopping
         online shouldn't mean juggling a different app or website for every kind
         of product. Whether you're picking up a new phone, restocking the
         kitchen, or shopping for an outfit, you can find it here — priced fairly,

@@ -8,7 +8,7 @@ import { useMemo } from "react";
 
 export const Route = createFileRoute("/saved")({
   head: () => ({
-    meta: [{ title: "Saved Ads — WTS Pakistan" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Saved Ads — WTS in Pakistan" }, { name: "robots", content: "noindex" }],
   }),
   component: SavedAds,
 });

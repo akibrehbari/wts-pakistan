@@ -36,7 +36,7 @@ export const Route = createFileRoute("/shop")({
   validateSearch: (s) => searchSchema.parse(s),
   head: () => ({
     meta: [
-      { title: "Shop — WTS Pakistan" },
+      { title: "Shop — WTS in Pakistan" },
       { name: "description", content: "Browse mobiles, laptops, electronics, appliances, fashion, groceries and more." },
     ],
   }),
