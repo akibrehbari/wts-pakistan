@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Star, Truck, ShieldCheck, Minus, Plus, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { getProduct, PRODUCTS, formatPKR, timeAgo, type Product } from "@/lib/products";
+import { getProduct, PRODUCTS, CATEGORIES, formatPKR, timeAgo, type Product } from "@/lib/products";
 import { getListing } from "@/lib/listings";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
@@ -60,8 +60,8 @@ function ProductPage() {
       <nav className="mb-6 text-xs text-muted-foreground">
         <Link to="/" className="hover:text-foreground">Home</Link>
         <span className="mx-2">/</span>
-        <Link to="/shop" search={{ category: product.category }} className="hover:text-foreground capitalize">
-          {product.category}
+        <Link to="/shop" search={{ category: product.category }} className="hover:text-foreground">
+          {CATEGORIES.find((c) => c.slug === product.category)?.label}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-foreground">{product.name}</span>
@@ -84,21 +84,23 @@ function ProductPage() {
 
         {/* Details */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">{product.category}</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            {CATEGORIES.find((c) => c.slug === product.category)?.label}
+          </p>
           <h1 className="mt-2 font-display text-4xl md:text-5xl">{product.name}</h1>
 
-          <div className="mt-3 flex flex-wrap items-center gap-3">
+          <div className="mt-3 space-y-1.5">
             {product.rating > 0 && (
               <div className="flex items-center gap-1 text-sm">
                 <Star className="h-4 w-4 fill-current text-primary" />
-                {product.rating}
+                <span className="font-medium">{product.rating}</span>
                 <span className="text-muted-foreground">({product.reviews} reviews)</span>
               </div>
             )}
             {product.location && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4" />
-                {product.location}
+                <span>{product.location}</span>
                 {product.postedAt && <span>· {timeAgo(product.postedAt)}</span>}
               </div>
             )}
@@ -109,7 +111,6 @@ function ProductPage() {
             {product.compareAt && (
               <span className="text-muted-foreground line-through">{formatPKR(product.compareAt)}</span>
             )}
-            <span className="text-xs text-muted-foreground">Inclusive of all taxes</span>
           </div>
 
           <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
@@ -177,23 +178,25 @@ function ProductPage() {
         </div>
       </div>
 
-      {/* Reviews */}
-      <section className="mt-20">
-        <h2 className="font-display text-3xl">What customers say</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {[
-            { name: "Ayesha K.", city: "Karachi", body: "Beautifully packaged and the quality is excellent. Will order again." },
-            { name: "Bilal R.", city: "Lahore", body: "Fits true to size and shipping was quick. Really happy with the fabric." },
-            { name: "Sana M.", city: "Islamabad", body: "Feels premium without the premium price tag. Highly recommend." },
-          ].map((r) => (
-            <div key={r.name} className="rounded-xl border bg-card p-5">
-              <div className="flex text-primary">{Array.from({length:5}).map((_,i)=><Star key={i} className="h-4 w-4 fill-current" />)}</div>
-              <p className="mt-3 text-sm text-muted-foreground">"{r.body}"</p>
-              <p className="mt-3 text-xs font-medium">{r.name} · {r.city}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Reviews — only shown for catalog items that actually carry ratings */}
+      {product.rating > 0 && (
+        <section className="mt-20">
+          <h2 className="font-display text-3xl">What customers say</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {[
+              { name: "Ayesha K.", city: "Karachi", body: "Beautifully packaged and the quality is excellent. Will order again." },
+              { name: "Bilal R.", city: "Lahore", body: "Fits true to size and shipping was quick. Really happy with the fabric." },
+              { name: "Sana M.", city: "Islamabad", body: "Feels premium without the premium price tag. Highly recommend." },
+            ].map((r) => (
+              <div key={r.name} className="rounded-xl border bg-card p-5">
+                <div className="flex text-primary">{Array.from({length:5}).map((_,i)=><Star key={i} className="h-4 w-4 fill-current" />)}</div>
+                <p className="mt-3 text-sm text-muted-foreground">"{r.body}"</p>
+                <p className="mt-3 text-xs font-medium">{r.name} · {r.city}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Related */}
       <section className="mt-20">

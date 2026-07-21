@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Search, ShoppingBag, User, Menu, X, Store, LayoutDashboard, LogOut, MapPin, ChevronDown, LayoutGrid, Plus, Heart } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, ListChecks, LogOut, MapPin, ChevronDown, LayoutGrid, Plus, Heart } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
@@ -17,7 +17,7 @@ import {
 
 export function Header() {
   const { count, setOpen } = useCart();
-  const { user, isSeller, openDialog, signOut } = useAuth();
+  const { user, openDialog, signOut } = useAuth();
   const [mobileNav, setMobileNav] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -116,15 +116,9 @@ export function Header() {
                     <div className="truncate text-xs font-normal text-muted-foreground">{user.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {isSeller ? (
-                    <DropdownMenuItem onSelect={() => navigate({ to: "/sell" })}>
-                      <LayoutDashboard className="mr-2 h-4 w-4" /> Seller Dashboard
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem onSelect={() => navigate({ to: "/sell" })}>
-                      <Store className="mr-2 h-4 w-4" /> Become a Seller
-                    </DropdownMenuItem>
-                  )}
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/sell" })}>
+                    <ListChecks className="mr-2 h-4 w-4" /> My Ads
+                  </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => navigate({ to: "/saved" })}>
                     <Heart className="mr-2 h-4 w-4" /> Saved Ads
                   </DropdownMenuItem>
@@ -249,9 +243,7 @@ export function Header() {
                   <span className="truncate text-sm font-medium">{user.name}</span>
                 </div>
                 <div className="flex shrink-0 items-center gap-3 text-xs">
-                  <Link to="/sell" onClick={() => setMobileNav(false)} className="text-primary">
-                    {isSeller ? "Seller Dashboard" : "Sell"}
-                  </Link>
+                  <Link to="/sell" onClick={() => setMobileNav(false)} className="text-primary">My Ads</Link>
                   <button onClick={() => { signOut(); setMobileNav(false); }} className="text-muted-foreground">Sign out</button>
                 </div>
               </div>

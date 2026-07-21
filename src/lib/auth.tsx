@@ -1,25 +1,19 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-export type UserRole = "buyer" | "seller" | "both";
-
 export type AuthUser = {
   id: string;
   email: string;
   name: string;
   picture?: string;
-  /** null until the user completes the buy/sell onboarding step */
-  role: UserRole | null;
 };
 
 type AuthCtx = {
   user: AuthUser | null;
-  isSeller: boolean;
   dialogOpen: boolean;
   openDialog: () => void;
   closeDialog: () => void;
   signInWithGoogle: (credential: string) => void;
   signOut: () => void;
-  setRole: (role: UserRole) => void;
 };
 
 const Ctx = createContext<AuthCtx | null>(null);
@@ -28,10 +22,10 @@ const KEY = "wts_auth_user_v1";
 /**
  * Decodes a Google ID token client-side without verifying its signature.
  * Fine for this demo (no backend exists yet), but NOT a substitute for
- * server-side verification before handling real orders or seller payouts —
+ * server-side verification before handling real orders or payments —
  * anyone could hand-craft a token and impersonate a user.
  */
-function decodeGoogleCredential(jwt: string): Omit<AuthUser, "role"> | null {
+function decodeGoogleCredential(jwt: string): AuthUser | null {
   try {
     const payload = jwt.split(".")[1];
     const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
@@ -64,17 +58,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthCtx>(
     () => ({
       user,
-      isSeller: user?.role === "seller" || user?.role === "both",
       dialogOpen,
       openDialog: () => setDialogOpen(true),
       closeDialog: () => setDialogOpen(false),
       signInWithGoogle: (credential) => {
         const decoded = decodeGoogleCredential(credential);
         if (!decoded) return;
-        setUser((prev) => (prev && prev.id === decoded.id ? prev : { ...decoded, role: null }));
+        setUser(decoded);
+        setDialogOpen(false);
       },
       signOut: () => setUser(null),
-      setRole: (role) => setUser((prev) => (prev ? { ...prev, role } : prev)),
     }),
     [user, dialogOpen]
   );

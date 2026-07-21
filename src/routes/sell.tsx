@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Trash2, Store } from "lucide-react";
+import { Trash2, ListChecks } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,18 +10,20 @@ import { useListings, addListing, removeListing, randomSwatch, slugify, type Lis
 import { CATEGORIES, CITIES, formatPKR, timeAgo, type Product } from "@/lib/products";
 import { ProductSwatch } from "@/components/ProductSwatch";
 
+const AD_CITIES = CITIES.filter((c) => c !== "Pakistan");
+
 export const Route = createFileRoute("/sell")({
   head: () => ({
     meta: [
-      { title: "Sell on WTS Pakistan" },
-      { name: "description", content: "List your products and start selling on WTS Pakistan." },
+      { title: "My Ads — WTS Pakistan" },
+      { name: "description", content: "Post an ad and manage your listings on WTS Pakistan." },
     ],
   }),
-  component: SellerDashboard,
+  component: MyAds,
 });
 
-function SellerDashboard() {
-  const { user, isSeller, openDialog, setRole } = useAuth();
+function MyAds() {
+  const { user, openDialog } = useAuth();
   const allListings = useListings();
   const myListings = user ? allListings.filter((l) => l.sellerId === user.id) : [];
 
@@ -29,7 +31,7 @@ function SellerDashboard() {
   const [price, setPrice] = useState("");
   const [compareAt, setCompareAt] = useState("");
   const [category, setCategory] = useState<Product["category"]>("fashion");
-  const [location, setLocation] = useState<string>(CITIES[0]);
+  const [location, setLocation] = useState<string>(AD_CITIES[0]);
   const [description, setDescription] = useState("");
 
   const resetForm = () => {
@@ -41,7 +43,7 @@ function SellerDashboard() {
     if (!user) return;
     const priceNum = Number(price);
     if (!name.trim() || !priceNum || priceNum <= 0) {
-      toast.error("Enter a product name and a valid price");
+      toast.error("Enter a title and a valid price");
       return;
     }
     const listing: Listing = {
@@ -62,47 +64,34 @@ function SellerDashboard() {
     };
     addListing(listing);
     resetForm();
-    toast.success("Listing published");
+    toast.success("Ad posted");
   };
 
   if (!user) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center sm:px-6">
-        <Store className="mx-auto h-10 w-10 text-primary" />
-        <h1 className="mt-4 font-display text-3xl font-bold">Sell on WTS Pakistan</h1>
+        <ListChecks className="mx-auto h-10 w-10 text-primary" />
+        <h1 className="mt-4 font-display text-3xl font-bold">Post an ad</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Sign in with Google to create a seller account and start listing products.
+          Sign in with Google to post an ad and manage your listings.
         </p>
         <Button size="lg" className="mt-6" onClick={openDialog}>Sign in to continue</Button>
       </div>
     );
   }
 
-  if (!isSeller) {
-    return (
-      <div className="mx-auto max-w-md px-4 py-24 text-center sm:px-6">
-        <Store className="mx-auto h-10 w-10 text-primary" />
-        <h1 className="mt-4 font-display text-3xl font-bold">Become a seller</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          You're signed in as a buyer. Switch on seller access to start listing products — you'll keep your buyer account too.
-        </p>
-        <Button size="lg" className="mt-6" onClick={() => setRole("both")}>Enable seller access</Button>
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <p className="text-xs uppercase tracking-widest text-muted-foreground">Seller Dashboard</p>
-      <h1 className="mt-1 font-display text-4xl font-bold">Welcome, {user.name.split(" ")[0]}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{myListings.length} active listing{myListings.length === 1 ? "" : "s"}</p>
+      <p className="text-xs uppercase tracking-widest text-muted-foreground">Your account</p>
+      <h1 className="mt-1 font-display text-4xl font-bold">My Ads</h1>
+      <p className="mt-1 text-sm text-muted-foreground">{myListings.length} active ad{myListings.length === 1 ? "" : "s"}</p>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
         <div>
           <h2 className="font-display text-2xl font-bold">My Listings</h2>
           {myListings.length === 0 ? (
             <div className="mt-4 rounded-lg border border-dashed py-16 text-center text-sm text-muted-foreground">
-              You haven't listed anything yet — add your first product to get started.
+              You haven't posted anything yet — use the form to post your first ad.
             </div>
           ) : (
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -116,7 +105,7 @@ function SellerDashboard() {
                     <div className="mt-1 text-sm font-semibold">{formatPKR(l.price)}</div>
                     <div className="mt-0.5 text-xs text-muted-foreground">{l.location} · {timeAgo(l.postedAt)}</div>
                     <button
-                      onClick={() => { removeListing(l.id); toast.success("Listing removed"); }}
+                      onClick={() => { removeListing(l.id); toast.success("Ad removed"); }}
                       className="mt-2 flex items-center gap-1 text-xs text-destructive hover:underline"
                     >
                       <Trash2 className="h-3 w-3" /> Remove
@@ -129,10 +118,11 @@ function SellerDashboard() {
         </div>
 
         <div className="rounded-lg border bg-card p-6">
-          <h2 className="font-display text-xl font-bold">Add a product</h2>
+          <h2 className="font-display text-xl font-bold">Post an ad</h2>
+          <p className="mt-1 text-xs text-muted-foreground">List a single item — no shop setup needed.</p>
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div>
-              <label className="text-sm font-medium">Product name</label>
+              <label className="text-sm font-medium">Title</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Handmade Leather Wallet" className="mt-1" />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -165,7 +155,7 @@ function SellerDashboard() {
                   onChange={(e) => setLocation(e.target.value)}
                   className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
                 >
-                  {CITIES.map((c) => (
+                  {AD_CITIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -173,9 +163,9 @@ function SellerDashboard() {
             </div>
             <div>
               <label className="text-sm font-medium">Description</label>
-              <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe your product..." className="mt-1" rows={4} />
+              <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe your item..." className="mt-1" rows={4} />
             </div>
-            <Button type="submit" className="w-full">Publish listing</Button>
+            <Button type="submit" className="w-full">Post ad</Button>
           </form>
         </div>
       </div>
