@@ -25,6 +25,8 @@ export type Product = {
   reviews: number;
   description: string;
   swatch: string; // gradient
+  /** Real photo URL — falls back to the gradient swatch when omitted (e.g. seller listings without a photo) */
+  image?: string;
   /** 1–10 = position in the manually curated Top 10 list; omitted = not in the list */
   topTenRank?: number;
   /** City the listing ships from — OLX-style classifieds detail */
@@ -77,6 +79,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 512,
     description: "6.4\" Super AMOLED, 50MP triple camera, 5000mAh battery. PTA approved.",
     swatch: "linear-gradient(135deg,#dfe3ea,#7d8aa1)",
+    image: "https://loremflickr.com/480/480/smartphone?lock=13",
     topTenRank: 1,
     location: "Karachi", postedAt: daysAgo(2),
   },
@@ -87,6 +90,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 738,
     description: "108MP camera, 120Hz AMOLED display, 33W fast charging.",
     swatch: "linear-gradient(135deg,#cfe8e4,#5f9c93)",
+    image: "https://loremflickr.com/480/480/smartphone?lock=14",
     topTenRank: 2,
     location: "Lahore", postedAt: daysAgo(1),
   },
@@ -97,6 +101,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9, reviews: 341,
     description: "A15 Bionic chip, dual 12MP camera system, Super Retina XDR display.",
     swatch: "linear-gradient(135deg,#e9ecef,#adb5bd)",
+    image: "https://loremflickr.com/480/480/iphone?lock=15",
     location: "Islamabad", postedAt: daysAgo(5),
   },
   {
@@ -105,6 +110,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.4, reviews: 289,
     description: "Heart-rate & SpO2 tracking, 7-day battery, notifications sync.",
     swatch: "linear-gradient(135deg,#dce4ea,#8b98a8)",
+    image: "https://loremflickr.com/480/480/smartwatch?lock=16",
     location: "Rawalpindi", postedAt: daysAgo(3),
   },
 
@@ -115,6 +121,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "1.6L Automatic, 68,000 km driven, single owner, all original documents.",
     swatch: "linear-gradient(135deg,#dfe3ea,#8a97a8)",
+    image: "https://loremflickr.com/480/480/corolla?lock=40",
     location: "Lahore", postedAt: daysAgo(1),
   },
   {
@@ -123,6 +130,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "1.8L, 42,000 km, sunroof, full option, bank leased — transferable.",
     swatch: "linear-gradient(135deg,#e6e2da,#96897a)",
+    image: "https://loremflickr.com/480/480/civic?lock=41",
     location: "Karachi", postedAt: daysAgo(3),
   },
 
@@ -133,6 +141,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "10 Marla, 3 bed 3 bath, corner plot, near main boulevard. Ready to move.",
     swatch: "linear-gradient(135deg,#eef1f2,#a9b7c2)",
+    image: "https://loremflickr.com/480/480/house,exterior?lock=42",
     location: "Rawalpindi", postedAt: daysAgo(4),
   },
   {
@@ -141,6 +150,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Prime location, all utilities available, clear title, immediate registry.",
     swatch: "linear-gradient(135deg,#f4efe0,#c9b98f)",
+    image: "https://loremflickr.com/480/480/land,plot?lock=43",
     location: "Lahore", postedAt: daysAgo(6),
   },
 
@@ -151,6 +161,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Furnished, 2nd floor, lift available, near Sea View. Rent per month.",
     swatch: "linear-gradient(135deg,#dbeef0,#8fb9bd)",
+    image: "https://loremflickr.com/480/480/apartment,interior?lock=44",
     location: "Karachi", postedAt: daysAgo(2),
   },
   {
@@ -159,6 +170,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "1 Kanal, 4 bed, servant quarter, gas + electricity connected. Rent per month.",
     swatch: "linear-gradient(135deg,#e9ecef,#b6c0c7)",
+    image: "https://loremflickr.com/480/480/house,modern?lock=45",
     location: "Islamabad", postedAt: daysAgo(5),
   },
 
@@ -169,6 +181,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 178,
     description: "12th Gen Intel Core i5, 15.6\" FHD display, Windows 11.",
     swatch: "linear-gradient(135deg,#e3e7ea,#94a2ad)",
+    image: "https://loremflickr.com/480/480/laptop?lock=17",
     topTenRank: 5,
     location: "Lahore", postedAt: daysAgo(7),
   },
@@ -178,6 +191,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 96,
     description: "Business-grade build, Core i7, 16GB RAM, backlit keyboard.",
     swatch: "linear-gradient(135deg,#d9dfe3,#6b7a86)",
+    image: "https://loremflickr.com/480/480/laptop?lock=18",
     location: "Karachi", postedAt: daysAgo(10),
   },
   {
@@ -186,6 +200,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 214,
     description: "AMD Ryzen 5, 8GB RAM, 512GB SSD. Lightweight everyday laptop.",
     swatch: "linear-gradient(135deg,#e6e2da,#a89f8f)",
+    image: "https://loremflickr.com/480/480/laptop?lock=19",
     location: "Faisalabad", postedAt: daysAgo(4),
   },
   {
@@ -194,6 +209,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 302,
     description: "Full HD, built-in Wi-Fi, multiple HDMI/USB ports.",
     swatch: "linear-gradient(135deg,#e0e0e0,#8f8f8f)",
+    image: "https://loremflickr.com/480/480/television?lock=20",
     topTenRank: 7,
     location: "Multan", postedAt: daysAgo(6),
   },
@@ -203,6 +219,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 143,
     description: "4K UHD resolution, Android TV, Dolby Audio.",
     swatch: "linear-gradient(135deg,#dde3e6,#7f8f97)",
+    image: "https://loremflickr.com/480/480/television?lock=21",
     location: "Karachi", postedAt: daysAgo(8),
   },
   {
@@ -211,6 +228,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.4, reviews: 267,
     description: "Compact HD display, ideal for bedrooms, 2 HDMI ports.",
     swatch: "linear-gradient(135deg,#e8e6e1,#a49d8e)",
+    image: "https://loremflickr.com/480/480/television?lock=22",
     location: "Peshawar", postedAt: daysAgo(2),
   },
   {
@@ -219,6 +237,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 156,
     description: "10 cu ft capacity, energy saving compressor, 3-year warranty.",
     swatch: "linear-gradient(135deg,#eef1f2,#adb8bd)",
+    image: "https://loremflickr.com/480/480/refrigerator?lock=23",
     location: "Lahore", postedAt: daysAgo(12),
   },
   {
@@ -227,6 +246,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 201,
     description: "8kg capacity, multiple wash programs, quiet operation.",
     swatch: "linear-gradient(135deg,#e6ecef,#93a3ac)",
+    image: "https://loremflickr.com/480/480/washingmachine?lock=24",
     location: "Islamabad", postedAt: daysAgo(9),
   },
   {
@@ -235,6 +255,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.3, reviews: 118,
     description: "23L capacity, grill function, digital control panel.",
     swatch: "linear-gradient(135deg,#e9e5df,#a89d89)",
+    image: "https://loremflickr.com/480/480/microwave?lock=25",
     location: "Gujranwala", postedAt: daysAgo(5),
   },
   {
@@ -243,6 +264,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 224,
     description: "DC inverter technology, 4-in-1 cooling, energy efficient.",
     swatch: "linear-gradient(135deg,#dbeef0,#79b3ba)",
+    image: "https://loremflickr.com/480/480/airconditioner?lock=26",
     topTenRank: 10,
     location: "Karachi", postedAt: daysAgo(3),
   },
@@ -252,6 +274,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 167,
     description: "Self-clean function, super cooling mode, low noise.",
     swatch: "linear-gradient(135deg,#d9ecee,#6ba3aa)",
+    image: "https://loremflickr.com/480/480/airconditioner?lock=27",
     location: "Lahore", postedAt: daysAgo(15),
   },
   {
@@ -260,6 +283,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 88,
     description: "18MP sensor, Full HD video, beginner-friendly controls.",
     swatch: "linear-gradient(135deg,#1c1c1c,#4a4a4a)",
+    image: "https://loremflickr.com/480/480/dslrcamera?lock=28",
     location: "Islamabad", postedAt: daysAgo(6),
   },
   {
@@ -268,6 +292,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.4, reviews: 312,
     description: "1080p night vision, motion detection, mobile app access.",
     swatch: "linear-gradient(135deg,#e2e2e2,#8a8a8a)",
+    image: "https://loremflickr.com/480/480/cctv?lock=29",
     location: "Rawalpindi", postedAt: daysAgo(4),
   },
 
@@ -278,6 +303,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "9,500 km driven, first owner, genuine condition, all documents clear.",
     swatch: "linear-gradient(135deg,#f0e6c8,#c9a24b)",
+    image: "https://loremflickr.com/480/480/motorcycle?lock=46",
     location: "Faisalabad", postedAt: daysAgo(2),
   },
   {
@@ -286,6 +312,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "2021 model, well maintained, new tyres, self start working perfectly.",
     swatch: "linear-gradient(135deg,#dfe9d4,#8fa876)",
+    image: "https://loremflickr.com/480/480/motorcycle?lock=47",
     location: "Multan", postedAt: daysAgo(5),
   },
 
@@ -296,6 +323,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 389,
     description: "Extra-long grain aged basmati rice, aromatic and fluffy. Bulk orders welcome.",
     swatch: "linear-gradient(135deg,#f4efe0,#d9cba7)",
+    image: "https://loremflickr.com/480/480/basmatirice?lock=32",
     location: "Gujranwala", postedAt: daysAgo(1),
   },
   {
@@ -304,6 +332,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 512,
     description: "Pure, cholesterol-free cooking oil. Carton and bulk pricing available.",
     swatch: "linear-gradient(135deg,#f5eec9,#e0c765)",
+    image: "https://loremflickr.com/480/480/cookingoil?lock=33",
     location: "Lahore", postedAt: daysAgo(3),
   },
   {
@@ -312,6 +341,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.8, reviews: 201,
     description: "Almonds, cashews, walnuts and raisins. Vacuum sealed for freshness.",
     swatch: "linear-gradient(135deg,#e6d3ae,#a97c4f)",
+    image: "https://loremflickr.com/480/480/driedfruit,nuts?lock=34",
     location: "Gilgit", postedAt: daysAgo(5),
   },
   {
@@ -320,6 +350,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Diesel generator, low hours, ideal for shop or small workshop backup power.",
     swatch: "linear-gradient(135deg,#e2e2e2,#8a8a8a)",
+    image: "https://loremflickr.com/480/480/generator?lock=48",
     location: "Gujranwala", postedAt: daysAgo(7),
   },
 
@@ -330,6 +361,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Wiring, switchboard repair, fan/light installation. Same-day visit available.",
     swatch: "linear-gradient(135deg,#fdf2d0,#f3c969)",
+    image: "https://loremflickr.com/480/480/electrician?lock=49",
     location: "Lahore", postedAt: daysAgo(1),
   },
   {
@@ -338,6 +370,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Experienced tutor for O/A Level and Matric students. Per month, per subject.",
     swatch: "linear-gradient(135deg,#dde3ea,#8f9bb0)",
+    image: "https://loremflickr.com/480/480/tutor,study?lock=50",
     location: "Karachi", postedAt: daysAgo(3),
   },
 
@@ -348,6 +381,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "2+ years experience, target-driven role, fuel allowance included. Salary per month.",
     swatch: "linear-gradient(135deg,#e9ecef,#adb5bd)",
+    image: "https://loremflickr.com/480/480/office?lock=51",
     location: "Islamabad", postedAt: daysAgo(2),
   },
   {
@@ -356,6 +390,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Adobe Suite proficiency required, social media & print design. Salary per month.",
     swatch: "linear-gradient(135deg,#f7d9d6,#dba4a4)",
+    image: "https://loremflickr.com/480/480/designer?lock=52",
     location: "Lahore", postedAt: daysAgo(4),
   },
 
@@ -366,6 +401,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "8 weeks old, litter trained, vaccinated. Both parents available to see.",
     swatch: "linear-gradient(135deg,#eaf0f2,#a8bcc2)",
+    image: "https://loremflickr.com/480/480/cat?lock=53",
     location: "Karachi", postedAt: daysAgo(1),
   },
   {
@@ -374,6 +410,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "3rd lactation, 18 litres/day, all vaccinations up to date.",
     swatch: "linear-gradient(135deg,#e6ecef,#93a3ac)",
+    image: "https://loremflickr.com/480/480/cow?lock=54",
     location: "Multan", postedAt: daysAgo(6),
   },
 
@@ -385,6 +422,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9, reviews: 87,
     description: "Wheel-thrown stoneware mugs, dishwasher and microwave safe.",
     swatch: "linear-gradient(135deg,#f2e6cd,#d6a37b)",
+    image: "https://loremflickr.com/480/480/mug?lock=2",
     topTenRank: 9,
     location: "Multan", postedAt: daysAgo(9),
   },
@@ -395,6 +433,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 54,
     description: "Woven on traditional pit looms. Soft, breathable, and generously sized.",
     swatch: "linear-gradient(135deg,#ede3cd,#9aa8b8)",
+    image: "https://loremflickr.com/480/480/blanket?lock=5",
     location: "Peshawar", postedAt: daysAgo(11),
   },
   {
@@ -404,6 +443,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 33,
     description: "200 thread-count cotton bedsheet set with 2 pillow covers. Machine washable.",
     swatch: "linear-gradient(135deg,#e9ecef,#adb5bd)",
+    image: "https://loremflickr.com/480/480/bedsheet,bedroom?lock=10",
     location: "Karachi", postedAt: daysAgo(6),
   },
 
@@ -414,6 +454,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 342,
     description: "Steam-distilled rose water. Cooling, hydrating, no additives.",
     swatch: "linear-gradient(135deg,#f7d9d6,#e0a1a1)",
+    image: "https://loremflickr.com/480/480/rosewater?lock=3",
     topTenRank: 3,
     location: "Lahore", postedAt: daysAgo(2),
   },
@@ -423,6 +464,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 198,
     description: "Cold-pressed argan blended with almond and vitamin E. Non-greasy finish.",
     swatch: "linear-gradient(135deg,#f4e4b9,#c69b52)",
+    image: "https://loremflickr.com/480/480/hairoil?lock=7",
     topTenRank: 8,
     location: "Karachi", postedAt: daysAgo(1),
   },
@@ -432,6 +474,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 29,
     description: "10% vitamin C serum for brighter, more even-looking skin. Fragrance-free.",
     swatch: "linear-gradient(135deg,#fdf2d0,#f3c969)",
+    image: "https://loremflickr.com/480/480/serum?lock=11",
     location: "Islamabad", postedAt: daysAgo(3),
   },
   {
@@ -440,6 +483,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 421,
     description: "Non-contact digital thermometer with instant readout.",
     swatch: "linear-gradient(135deg,#eaf0f2,#a8bcc2)",
+    image: "https://loremflickr.com/480/480/thermometer?lock=30",
     location: "Multan", postedAt: daysAgo(7),
   },
   {
@@ -450,6 +494,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.8, reviews: 214,
     description: "Breathable pure linen kurta cut for everyday ease.",
     swatch: "linear-gradient(135deg,#e8dcc4,#c9b291)",
+    image: "https://loremflickr.com/480/480/kurta?lock=1",
     location: "Lahore", postedAt: daysAgo(4),
   },
   {
@@ -459,6 +504,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.7, reviews: 156,
     description: "Printed lawn suit with embroidered dupatta. Unstitched.",
     swatch: "linear-gradient(135deg,#f7d9d6,#dba4a4)",
+    image: "https://loremflickr.com/480/480/lawnsuit,pakistani?lock=31",
     location: "Karachi", postedAt: daysAgo(2),
   },
   {
@@ -469,6 +515,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.6, reviews: 162,
     description: "Regular-fit cotton poplin shirt. Mother-of-pearl buttons.",
     swatch: "linear-gradient(135deg,#f2efe6,#c9d4dc)",
+    image: "https://loremflickr.com/480/480/shirt?lock=8",
     topTenRank: 6,
     location: "Faisalabad", postedAt: daysAgo(5),
   },
@@ -480,6 +527,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.5, reviews: 41,
     description: "Lightweight everyday sneakers with a cushioned sole. True to size.",
     swatch: "linear-gradient(135deg,#eef0f2,#c7ccd1)",
+    image: "https://loremflickr.com/480/480/sneakers?lock=9",
     location: "Lahore", postedAt: daysAgo(3),
   },
   {
@@ -489,6 +537,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9, reviews: 128,
     description: "Vegetable-tanned leather, brass hardware, cotton canvas lining. Ages beautifully.",
     swatch: "linear-gradient(135deg,#d9b184,#8f5f36)",
+    image: "https://loremflickr.com/480/480/leather,tote?lock=4",
     topTenRank: 4,
     location: "Lahore", postedAt: daysAgo(8),
   },
@@ -498,6 +547,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.8, reviews: 76,
     description: "Hand-rolled edges. Digitally printed floral motifs.",
     swatch: "linear-gradient(135deg,#dfe9d4,#a6b58a)",
+    image: "https://loremflickr.com/480/480/silk,scarf?lock=6",
     location: "Islamabad", postedAt: daysAgo(4),
   },
   {
@@ -507,6 +557,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.4, reviews: 22,
     description: "UV400 protection with polarized lenses. Includes hard case.",
     swatch: "linear-gradient(135deg,#f0e6c8,#c9a24b)",
+    image: "https://loremflickr.com/480/480/sunglasses?lock=12",
     location: "Karachi", postedAt: daysAgo(2),
   },
 
@@ -517,6 +568,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9, reviews: 267,
     description: "Nimra Ahmed's bestselling Urdu novel, complete edition.",
     swatch: "linear-gradient(135deg,#dde3ea,#8f9bb0)",
+    image: "https://loremflickr.com/480/480/book?lock=35",
     location: "Karachi", postedAt: daysAgo(10),
   },
   {
@@ -525,6 +577,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9, reviews: 178,
     description: "All 7 books in a boxed paperback set.",
     swatch: "linear-gradient(135deg,#e9e2f0,#b6a3cf)",
+    image: "https://loremflickr.com/480/480/harrypotter,books?lock=36",
     location: "Islamabad", postedAt: daysAgo(14),
   },
 
@@ -535,6 +588,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Ages 4-7, training wheels included, lightly used, good condition.",
     swatch: "linear-gradient(135deg,#f7d9d6,#e0a1a1)",
+    image: "https://loremflickr.com/480/480/bicycle?lock=55",
     location: "Lahore", postedAt: daysAgo(3),
   },
   {
@@ -543,6 +597,7 @@ export const PRODUCTS: Product[] = [
     rating: 0, reviews: 0,
     description: "Convertible car seat + carrycot + stroller. Barely used, like new.",
     swatch: "linear-gradient(135deg,#dfe9d4,#a6b58a)",
+    image: "https://loremflickr.com/480/480/stroller,baby?lock=56",
     location: "Islamabad", postedAt: daysAgo(2),
   },
 ];

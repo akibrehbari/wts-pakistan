@@ -33,9 +33,10 @@ function MyAds() {
   const [category, setCategory] = useState<Product["category"]>("fashion");
   const [location, setLocation] = useState<string>(AD_CITIES[0]);
   const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const resetForm = () => {
-    setName(""); setPrice(""); setCompareAt(""); setDescription("");
+    setName(""); setPrice(""); setCompareAt(""); setDescription(""); setImageUrl("");
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -57,6 +58,7 @@ function MyAds() {
       reviews: 0,
       description: description.trim() || "No description provided.",
       swatch: randomSwatch(),
+      image: imageUrl.trim() || undefined,
       sellerId: user.id,
       sellerName: user.name,
       location,
@@ -160,6 +162,11 @@ function MyAds() {
                   ))}
                 </select>
               </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Photo URL (optional)</label>
+              <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." className="mt-1" />
+              <p className="mt-1 text-[11px] text-muted-foreground">Paste a link to a photo of your item. Leave blank to use a placeholder.</p>
             </div>
             <div>
               <label className="text-sm font-medium">Description</label>
